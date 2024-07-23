@@ -1,3 +1,8 @@
+/* Don't forget to specify box-sizing for all elements to make sizing predictable. (Added below) */
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
@@ -7,10 +12,15 @@ body {
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+    /* On some pages, the content is larger than 100vh (e.g. player-search page when more than one player is returned). If you still want to use height 100vh here due to the image background, you need to set overflow: scroll; and explicit height to the .container selector. Alternatevely, you could dispaly search results on the player-search page in a row to fit more players on the page without a need to scroll.
+     */
     height: 100vh;
 }
 
 .container {
+    /* Added height and overflow-y according to the comment above */
+    height: calc(100vh - 100px);
+    overflow-y:scroll;
     max-width: 800px;
     margin: 50px auto;
     background: transparent;
@@ -34,12 +44,14 @@ h1 {
 
 #buttons {
     display: flex;
+    /* No need to specify, it's a row by default. */
     flex-direction: row;
     justify-content: space-around;
 }
 
 button {
     padding: 10px 20px;
+    /* Don't forget to use CSS variables for values that you repeat often (color, font-sizes, border-radius and similar) */
     color: #fbb034;
     border: none;
     border-radius: 4px;
@@ -63,6 +75,7 @@ select {
     display: block;
     margin: 20px 0;
     padding: 10px;
+    /* I'd make the width of select element the same as the width of the button. It makes the layout of the page cleaner.  */
     width: 35%;
     font-size: 14px;
     text-align: center;
@@ -156,6 +169,7 @@ img {
 
 #player-input {
     display: block;
+    /* Use form element as a parent of select elements and input, then set it as a flex container with direction column. Only add padding to the form element so you don't have to set margin for each element (select, input, submit button) separently. This will make your code more scalable and increase maintenabilty. */
     margin: 20px 0;
     padding: 10px;
     width: 40%;

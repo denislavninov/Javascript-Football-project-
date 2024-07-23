@@ -30,6 +30,7 @@ getliveScores.addEventListener("click", function (e) {
 
                 const listGames = document.createElement('li');
                 listGames.setAttribute('data-id', fixture.id);
+                // Avoid using innerHTML, it's considered insecure approach. Instead, create elements in JS as we did in the lessons. See here: https://medium.com/@verity.carlos/why-you-shouldnt-use-innerhtml-and-what-to-use-instead-ed99d064a416#:~:text=The%20drawbacks%20of%20innerHTML&text=All%20three%20properties%20(textContent%2C%20innerText,may%20pose%20a%20security%20risk.
                 listGames.innerHTML = `
                 <img src="${league.logo}" alt="${league.name} logo" class="league-logo">
                 <span class="league-name">${league.name}</span>
