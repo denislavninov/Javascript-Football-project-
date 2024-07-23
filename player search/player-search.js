@@ -4,6 +4,7 @@ const key = `0bcb75ac8d2d8f9a7027b6eb7b8c0a84`;
 document.getElementById('search-button').addEventListener('click', fetchPlayer);
 
 async function fetchPlayer() {
+    // No need to repeat the key variable again, it's defined in the global scope in this file already.
     const key = `0bcb75ac8d2d8f9a7027b6eb7b8c0a84`;
     const playerName = document.getElementById('player-input').value;
     const url = `https://v3.football.api-sports.io/players?search=${playerName}`;
@@ -53,6 +54,7 @@ function fetchLeagues() {
 
 function populateLeagues(leagues) {
     const leagueSelect =document.getElementById("league-select");
+    // Avoid using innerHTML
     leagueSelect.innerHTML = '<option value="">Select a league</option>';
 
     leagues.forEach(league=> {
@@ -82,6 +84,7 @@ function fetchTeams() {
 
 function populateTeams(teams) {
     const teamSelect = document.getElementById('team-select');
+    // Avoid using innerHTML
     teamSelect.innerHTML = '<option value="">Select a Team</option>';
 
     teams.forEach(team => {
@@ -98,6 +101,7 @@ function searchPlayer() {
     const teamId = document.getElementById('team-select').value;
 
     if (!playerName) {
+        // Add the error message to an element in the HTML, avoid using alert fucntion as it's considered poor user experience nowadays.
         alert('Please enter a player name');
         return;
     }
@@ -133,6 +137,7 @@ function displayPlayerInfo(players) {
     const container = document.getElementById('player-info');
     container.innerHTML = '';
     if (players.length === 0) {
+        // Avoid using innerHTML
         container.innerHTML = '<p>No player found</p>'
         return;
     }
@@ -141,6 +146,7 @@ function displayPlayerInfo(players) {
         const playerName =player
         const playerDiv = document.createElement('div');
         playerDiv.classList.add('player-info');
+        // Avoid using innerHTML
         playerDiv.innerHTML =
             `
         <h2>${player.player.name}</h2>
