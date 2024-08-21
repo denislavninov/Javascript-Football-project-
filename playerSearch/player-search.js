@@ -4,7 +4,6 @@ const key = `0bcb75ac8d2d8f9a7027b6eb7b8c0a84`;
 document.getElementById('search-button').addEventListener('click', fetchPlayer);
 
 async function fetchPlayer() {
-    const key = `0bcb75ac8d2d8f9a7027b6eb7b8c0a84`;
     const playerName = document.getElementById('player-input').value;
     const url = `https://v3.football.api-sports.io/players?search=${playerName}`;
 
@@ -47,18 +46,23 @@ function fetchLeagues() {
     })
     .then(response => response.json())
     .then(data => populateLeagues(data.response))
-    .catch(error => console.error('Erro fetching leagues',error));
+    .catch(error => console.error('Error fetching leagues',error));
 
 }
 
 function populateLeagues(leagues) {
     const leagueSelect =document.getElementById("league-select");
-    leagueSelect.innerHTML = '<option value="">Select a league</option>';
+    leagueSelect.innerText = '';
+
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.innerText = 'Select a League';
+    leagueSelect.appendChild(defaultOption);
 
     leagues.forEach(league=> {
         const option = document.createElement('option');
         option.value = league.league.id;
-        option.textContent = league.league.name;
+        option.innerText = league.league.name;
         leagueSelect.appendChild(option);
     });
 }
@@ -82,12 +86,17 @@ function fetchTeams() {
 
 function populateTeams(teams) {
     const teamSelect = document.getElementById('team-select');
-    teamSelect.innerHTML = '<option value="">Select a Team</option>';
+    teamSelect.innerText = '';
+
+    const defaultOptionTeam = document.createElement('option');
+    defaultOptionTeam.value = '';
+    defaultOptionTeam.innerText = 'Select a Team';
+    teamSelect.appendChild(defaultOptionTeam);
 
     teams.forEach(team => {
         const option = document.createElement('option');
         option.value = team.team.id;
-        option.textContent = team.team.name;
+        option.innerText = team.team.name;
         teamSelect.appendChild(option);
     });
 }
@@ -96,11 +105,14 @@ function searchPlayer() {
     const playerName = document.getElementById('player-input').value;
     const leagueId = document.getElementById('league-select').value;
     const teamId = document.getElementById('team-select').value;
+    const errorMessage = document.getElementById('error-mesage');
 
     if (!playerName) {
-        alert('Please enter a player name');
+        errorMessage.innerText = 'Please enter a player name';
         return;
     }
+    errorMessage.innerText = '';
+
 
     const url = `https://v3.football.api-sports.io/players?search=${playerName}&league=${leagueId}&team=${teamId}`;
 
@@ -133,25 +145,46 @@ function displayPlayerInfo(players) {
     const container = document.getElementById('player-info');
     container.innerHTML = '';
     if (players.length === 0) {
-        container.innerHTML = '<p>No player found</p>'
+        container.innerText = '<p>No player found</p>'
         return;
     }
 
     players.forEach(player => {
-        const playerName =player
         const playerDiv = document.createElement('div');
         playerDiv.classList.add('player-info');
-        playerDiv.innerHTML =
-            `
-        <h2>${player.player.name}</h2>
-        <img src="${player.player.photo}" alt="No photo available">
-        <p>Date of Birth: ${player.player.birth.date}</p>
-        <p>Nationality: ${player.player.nationality}</p>
-        <p>Position: ${player.statistics[0].games.position}</p>
-        <p>Team: ${player.statistics[0].team.name}</p>
-    `;
 
+        // Create and append the player's name
+        const playerName = document.createElement('h2');
+        playerName.innerText = player.player.name;
+        playerDiv.appendChild(playerName);
+
+        // Create and append the player's photo
+        const playerPhoto = document.createElement('img');
+        playerPhoto.src = player.player.photo;
+        playerPhoto.alt = 'No photo available';
+        playerDiv.appendChild(playerPhoto);
+
+        // Create and append the player's date of birth
+        const playerDOB = document.createElement('p');
+        playerDOB.innerText = `Date of Birth: ${player.player.birth.date}`;
+        playerDiv.appendChild(playerDOB);
+
+        // Create and append the player's nationality
+        const playerNationality = document.createElement('p');
+        playerNationality.innerText = `Nationality: ${player.player.nationality}`;
+        playerDiv.appendChild(playerNationality);
+
+        // Create and append the player's position
+        const playerPosition = document.createElement('p');
+        playerPosition.innerText = `Position: ${player.statistics[0].games.position}`;
+        playerDiv.appendChild(playerPosition);
+
+        // Create and append the player's team
+        const playerTeam = document.createElement('p');
+        playerTeam.innerText = `Team: ${player.statistics[0].team.name}`;
+        playerDiv.appendChild(playerTeam);
+
+        // Append the playerDiv to the container
         container.appendChild(playerDiv);
-
     });
 }

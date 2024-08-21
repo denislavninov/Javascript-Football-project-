@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
+    <title>Player Search</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Football Player</h1>
+        <form id="player-search-form">
+            <select id="league-select">
+                <option value="">Select a League</option>
+            </select>
+            <select id="team-select">
+                <option value="">Select a Team</option>
+            </select>
+            <input type="text" id="player-input" placeholder="Enter player name (e.g., Ronaldo)">
+            <button type="button" id="search-button">Search</button>
+        </form>
+        <div id="error-message"></div>
+        <div id="player-info"></div>
+    </div>
+    <script src="../playerSearch/player-search.js"></script>
+</body>
+</html>
