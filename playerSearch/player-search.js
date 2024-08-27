@@ -1,7 +1,6 @@
 const key = `0bcb75ac8d2d8f9a7027b6eb7b8c0a84`;
 
-
-document.getElementById('search-button').addEventListener('click', fetchPlayer);
+// Removed click ement listener for the search button, it's added in the DOMContentLoaded event listener instead.
 
 async function fetchPlayer() {
     const playerName = document.getElementById('player-input').value;
@@ -32,7 +31,8 @@ async function fetchPlayer() {
 document.addEventListener('DOMContentLoaded', () => {
     fetchLeagues();
     document.getElementById('league-select').addEventListener('change', fetchTeams);
-    document.getElementById('search-button').addEventListener('click', searchPlayer);
+    // Use form submit event listener instead of only covering the click event
+    document.getElementById('player-search-form').addEventListener('submit', searchPlayer);
 });
 
 function fetchLeagues() {
@@ -44,14 +44,21 @@ function fetchLeagues() {
             "x-rapidapi-key": '0bcb75ac8d2d8f9a7027b6eb7b8c0a84'
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        // If you want to improve the solution even more, you can check the status of the HTTP respose here. Normally, it's good to apply it to all API requests when working with Fetch API.
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw Error(`Could not fetch leagues. Response code ${response.status}.`)
+        }
+        })
     .then(data => populateLeagues(data.response))
     .catch(error => console.error('Error fetching leagues',error));
 
 }
 
 function populateLeagues(leagues) {
-    const leagueSelect =document.getElementById("league-select");
+    const leagueSelect = document.getElementById("league-select");
     leagueSelect.innerText = '';
 
     const defaultOption = document.createElement('option');
@@ -59,7 +66,7 @@ function populateLeagues(leagues) {
     defaultOption.innerText = 'Select a League';
     leagueSelect.appendChild(defaultOption);
 
-    leagues.forEach(league=> {
+    leagues.forEach(league => {
         const option = document.createElement('option');
         option.value = league.league.id;
         option.innerText = league.league.name;
