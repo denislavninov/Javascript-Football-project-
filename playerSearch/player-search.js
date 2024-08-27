@@ -1,8 +1,6 @@
 const key = `0bcb75ac8d2d8f9a7027b6eb7b8c0a84`;
 
 
-document.getElementById('search-button').addEventListener('click', fetchPlayer);
-
 async function fetchPlayer() {
     const playerName = document.getElementById('player-input').value;
     const url = `https://v3.football.api-sports.io/players?search=${playerName}`;
@@ -32,7 +30,7 @@ async function fetchPlayer() {
 document.addEventListener('DOMContentLoaded', () => {
     fetchLeagues();
     document.getElementById('league-select').addEventListener('change', fetchTeams);
-    document.getElementById('search-button').addEventListener('click', searchPlayer);
+    document.getElementById('search-button').addEventListener('submit', searchPlayer);
 });
 
 function fetchLeagues() {
@@ -44,14 +42,19 @@ function fetchLeagues() {
             "x-rapidapi-key": '0bcb75ac8d2d8f9a7027b6eb7b8c0a84'
         }
     })
-    .then(response => response.json())
-    .then(data => populateLeagues(data.response))
-    .catch(error => console.error('Error fetching leagues',error));
-
-}
+    .then(response => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw Error(`Could not fetch leagues. Response code ${response.status}.`)
+        }
+        })
+        .then(data => populateLeagues(data.response))
+        .catch(error => console.error('Error fetching leagues',error));
+    }
 
 function populateLeagues(leagues) {
-    const leagueSelect =document.getElementById("league-select");
+    const leagueSelect = document.getElementById("league-select");
     leagueSelect.innerText = '';
 
     const defaultOption = document.createElement('option');
@@ -59,7 +62,7 @@ function populateLeagues(leagues) {
     defaultOption.innerText = 'Select a League';
     leagueSelect.appendChild(defaultOption);
 
-    leagues.forEach(league=> {
+    leagues.forEach(league => {
         const option = document.createElement('option');
         option.value = league.league.id;
         option.innerText = league.league.name;
